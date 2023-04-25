@@ -4,14 +4,14 @@ import ua.com.vyshniakovpo.Coordinates;
 
 public abstract class Entity {
 
-    private Coordinates coordinates;
+    protected Coordinates coordinates;
 
-    protected Entity(Coordinates coordinates) {
-        this.coordinates = coordinates;
-    }
 
     public Coordinates getCoordinates() {
         return coordinates;
     }
 
+    public void setCoordinates(Coordinates coordinates) {
+        this.coordinates = coordinates;
+    }
 }

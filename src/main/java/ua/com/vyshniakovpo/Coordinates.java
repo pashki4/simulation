@@ -2,13 +2,13 @@ package ua.com.vyshniakovpo;
 
 import java.util.Objects;
 
-public record Coordinates(Integer horizontal, Integer vertical) {
+public record Coordinates(int horizontal, int vertical) {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Coordinates that = (Coordinates) o;
-        return Objects.equals(horizontal, that.horizontal) && Objects.equals(vertical, that.vertical);
+        return horizontal == that.horizontal && vertical == that.vertical;
     }
 
     @Override
