@@ -1,16 +1,15 @@
 package ua.com.vyshniakovpo.entity;
 
-import ua.com.vyshniakovpo.Coordinates;
-import ua.com.vyshniakovpo.field.Field;
+import ua.com.vyshniakovpo.worldmap.WorldMap;
 
 public class Predator extends Creature {
 
-    public Predator(Integer speed) {
-        super(speed);
+    public Predator() {
+        super(2);
     }
 
     @Override
-    public void makeMove(Field field) {
+    public void makeMove(WorldMap worldMap) {
 
     }
 }

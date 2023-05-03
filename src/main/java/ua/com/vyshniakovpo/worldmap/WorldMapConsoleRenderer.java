@@ -1,18 +1,19 @@
-package ua.com.vyshniakovpo.field;
+package ua.com.vyshniakovpo.worldmap;
 
 import ua.com.vyshniakovpo.Coordinates;
 import ua.com.vyshniakovpo.entity.Entity;
+import ua.com.vyshniakovpo.entity.UnknownEntity;
 
-import java.util.Map;
 import java.util.Objects;
 
-public class FieldConsoleRenderer implements FieldRenderer {
+public class WorldMapConsoleRenderer implements WorldMapRenderer {
 
-    public void render(Field field) {
-        Map<Coordinates, Entity> entities = field.getEntities();
+    public void render(WorldMap worldMap) {
+        java.util.Map<Coordinates, Entity> entities = worldMap.getEntities();
         StringBuilder sb = new StringBuilder();
-        for (int vertical = field.y - 1; vertical >= 0; vertical--) {
-            for (int horizontal = 0; horizontal < field.x; horizontal++) {
+
+        for (int vertical = worldMap.y - 1; vertical >= 0; vertical--) {
+            for (int horizontal = 0; horizontal < worldMap.x; horizontal++) {
                 Entity entity = entities.get(new Coordinates(horizontal, vertical));
                 if (Objects.isNull(entity)) {
                     sb.append("🟫");
@@ -23,6 +24,8 @@ public class FieldConsoleRenderer implements FieldRenderer {
                         case "tree" -> sb.append("🌳");
                         case "predator" -> sb.append("🦊");
                         case "herbivore" -> sb.append("🐓");
+                        default -> throw new UnknownEntity("Unknown entity: "
+                                + entity.getClass().getSimpleName());
                     }
                 }
             }

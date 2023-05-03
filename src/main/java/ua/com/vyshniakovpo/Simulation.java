@@ -2,28 +2,26 @@ package ua.com.vyshniakovpo;
 
 import ua.com.vyshniakovpo.entity.Creature;
 import ua.com.vyshniakovpo.entity.Entity;
-import ua.com.vyshniakovpo.field.Field;
-import ua.com.vyshniakovpo.field.FieldRenderer;
-
-import java.util.Map;
+import ua.com.vyshniakovpo.worldmap.WorldMap;
+import ua.com.vyshniakovpo.worldmap.WorldMapRenderer;
 
 public class Simulation {
 
-    private final Field field;
+    private final WorldMap worldMap;
     private int turnCount;
-    private final FieldRenderer renderer;
+    private final WorldMapRenderer renderer;
 
-    public Simulation(Field field, FieldRenderer renderer) {
-        this.field = field;
+    public Simulation(WorldMap worldMap, WorldMapRenderer renderer) {
+        this.worldMap = worldMap;
         this.renderer = renderer;
     }
 
     public void nextTurn() {
-        field.getEntities().entrySet()
+        worldMap.getEntities().entrySet()
                 .stream()
                 .filter(Creature.class::isInstance)
                 .map(Creature.class::cast)
-                .forEach(creature -> creature.makeMove(field));
+                .forEach(creature -> creature.makeMove(worldMap));
     }
 
     public void startSimulation() {
@@ -35,6 +33,6 @@ public class Simulation {
     }
 
     public void initActions() {
-        Map<Coordinates, Entity> entities = field.getEntities();
+        java.util.Map<Coordinates, Entity> entities = worldMap.getEntities();
     }
 }

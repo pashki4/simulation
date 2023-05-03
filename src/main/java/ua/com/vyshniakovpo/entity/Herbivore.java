@@ -1,17 +1,18 @@
 package ua.com.vyshniakovpo.entity;
 
-import ua.com.vyshniakovpo.field.Field;
+import ua.com.vyshniakovpo.worldmap.WorldMap;
 
 import java.util.List;
 
 public class Herbivore extends Creature {
-    public Herbivore(int speed) {
-        super(speed);
+    public Herbivore() {
+        super(1);
     }
 
     @Override
-    public void makeMove(Field field) {
-        List<Entity> list = field.getEntities("Grass");
+    public void makeMove(WorldMap worldMap) {
+        List<Entity> list = worldMap.getEntitiesByType(Grass.class);
+
         // for(Entity grass: list) {
         // if (coordinates.horizontal < grass.coordinates)
         // do smth else {

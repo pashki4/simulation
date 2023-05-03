@@ -6,7 +6,6 @@ public abstract class Entity {
 
     protected Coordinates coordinates;
 
-
     public Coordinates getCoordinates() {
         return coordinates;
     }

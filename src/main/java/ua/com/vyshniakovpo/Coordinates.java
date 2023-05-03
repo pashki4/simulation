@@ -3,6 +3,7 @@ package ua.com.vyshniakovpo;
 import java.util.Objects;
 
 public record Coordinates(int horizontal, int vertical) {
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

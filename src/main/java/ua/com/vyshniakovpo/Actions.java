@@ -1,28 +1,31 @@
 package ua.com.vyshniakovpo;
 
 import ua.com.vyshniakovpo.entity.Entity;
-import ua.com.vyshniakovpo.field.Field;
-import ua.com.vyshniakovpo.field.FieldUtil;
+import ua.com.vyshniakovpo.entity.EntityFactory;
+import ua.com.vyshniakovpo.worldmap.WorldMap;
 
 import java.util.List;
-import java.util.Map;
 
 public class Actions {
 
-    public static void initActions(Field field) {
+
+    private Actions() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
+    public static void initActions(WorldMap worldMap) {
         List<Entity> listOfEntities = EntityFactory.getListOfEntities(
                 List.of("predator", "herbivore", "herbivore",
-                "herbivore", "tree", "tree", "tree", "rock", "rock", "rock")
+                "herbivore", "tree", "tree", "tree", "rock", "rock", "rock",
+                        "grass","grass","grass", "grass", "grass", "grass", "grass", "grass")
         );
-        populateFieldByEntities(field, listOfEntities);
-
+        populateWorldMapByEntities(worldMap, listOfEntities);
     }
 
-    private static void populateFieldByEntities(Field field, List<Entity> listOfEntities) {
+    private static void populateWorldMapByEntities(WorldMap worldMap, List<Entity> listOfEntities) {
         listOfEntities.forEach(entity -> {
-                    Coordinates coordinates = field.getEmptyCoordinates();
+                    Coordinates coordinates = worldMap.getRandomEmptyCoordinates();
                     entity.setCoordinates(coordinates);
-                    field.addEntity(coordinates, entity);
+                    worldMap.addEntity(coordinates, entity);
                 }
         );
     }

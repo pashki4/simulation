@@ -1,16 +1,15 @@
 package ua.com.vyshniakovpo.entity;
 
-import ua.com.vyshniakovpo.Coordinates;
-import ua.com.vyshniakovpo.field.Field;
+import ua.com.vyshniakovpo.worldmap.WorldMap;
 
 public abstract class Creature extends Entity {
-    private final Integer speed;
-    private Integer hp = 100;
+    protected final int speed;
+    private int hp = 100;
 
-    protected Creature(Integer speed) {
+    protected Creature(int speed) {
         this.speed = speed;
     }
 
-    public abstract void makeMove(Field field);
+    public abstract void makeMove(WorldMap worldMap);
 
 }

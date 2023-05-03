@@ -1,22 +1,23 @@
-package ua.com.vyshniakovpo;
+package ua.com.vyshniakovpo.entity;
 
-import ua.com.vyshniakovpo.entity.*;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class EntityFactory {
+
+    private EntityFactory() {
+        throw new UnsupportedOperationException("It's a utility class and cannot be instantiated");
+    }
+
     public static List<Entity> getListOfEntities(List<String> names) {
         return names.stream()
                 .map(EntityFactory::create)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static Entity create(String entity) {
         return switch (entity.toLowerCase()) {
-            case "predator" -> new Predator(2);
-            case "herbivore" -> new Herbivore(1);
+            case "predator" -> new Predator();
+            case "herbivore" -> new Herbivore();
             case "grass" -> new Grass();
             case "rock" -> new Rock();
             case "tree" -> new Tree();
