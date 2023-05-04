@@ -11,7 +11,7 @@ public class Herbivore extends Creature {
 
     @Override
     public void makeMove(WorldMap worldMap) {
-        List<Entity> list = worldMap.getEntitiesByType(Grass.class);
+        List<Grass> list = worldMap.getEntitiesByType(Grass.class);
 
         // for(Entity grass: list) {
         // if (coordinates.horizontal < grass.coordinates)

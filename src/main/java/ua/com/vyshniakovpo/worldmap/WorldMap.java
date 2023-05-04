@@ -2,10 +2,9 @@ package ua.com.vyshniakovpo.worldmap;
 
 import ua.com.vyshniakovpo.Coordinates;
 import ua.com.vyshniakovpo.entity.Entity;
+import ua.com.vyshniakovpo.entity.Herbivore;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
@@ -27,23 +26,48 @@ public class WorldMap {
         return entities;
     }
 
-    public <T extends Entity> List<Entity> getEntitiesByType(Class<T> cls) {
+    public <T extends Entity> List<T> getEntitiesByType(Class<T> cls) {
         return entities.values()
                 .stream()
-                .filter(entity -> entity.getClass().equals(cls))
-                .collect(Collectors.toList()
-                );
+                .filter(cls::isInstance)
+                .map(cls::cast)
+                .toList();
     }
 
     public boolean isCellEmpty(Coordinates coordinates) {
         return !entities.containsKey(coordinates);
     }
 
+    public Coordinates getClosestHerbivore(Coordinates coordinates) {
+        TreeMap<Integer, List<Entity>> herbivores = entities.values().stream()
+                .filter(Herbivore.class::isInstance)
+                .collect(Collectors.groupingBy(e -> {
+                            Coordinates current = e.getCoordinates();
+                            int difference = (current.vertical() + current.horizontal()) -
+                                    (coordinates.horizontal() + coordinates.vertical());
+                            return Math.abs(difference);
+                        }, TreeMap::new, Collectors.toList())
+                );
+
+        return herbivores.firstEntry().getValue().get(0).getCoordinates();
+    }
+
+    public <T extends Coordinates> List<T> validate(List<T> list) {
+        List<T> result = new ArrayList<>();
+        for (T current : list) {
+            if (current.horizontal() >= 0 && current.horizontal() < x &&
+                    current.vertical() >= 0 && current.vertical() < y) {
+                result.add(current);
+            }
+        }
+        return result;
+    }
+
     public Coordinates getRandomEmptyCoordinates() {
         while (true) {
-            int x = ThreadLocalRandom.current().nextInt(this.x);
-            int y = ThreadLocalRandom.current().nextInt(this.y);
-            Coordinates emptyCoordinates = new Coordinates(x, y);
+            int randomX = ThreadLocalRandom.current().nextInt(this.x);
+            int randomY = ThreadLocalRandom.current().nextInt(this.y);
+            Coordinates emptyCoordinates = new Coordinates(randomX, randomY);
             if (!entities.containsKey(emptyCoordinates)) {
                 return emptyCoordinates;
             }

@@ -5,11 +5,13 @@ import ua.com.vyshniakovpo.entity.Entity;
 import ua.com.vyshniakovpo.worldmap.WorldMap;
 import ua.com.vyshniakovpo.worldmap.WorldMapRenderer;
 
+import java.util.Map;
+
 public class Simulation {
 
     private final WorldMap worldMap;
-    private int turnCount;
     private final WorldMapRenderer renderer;
+    private int turnCount;
 
     public Simulation(WorldMap worldMap, WorldMapRenderer renderer) {
         this.worldMap = worldMap;
@@ -33,6 +35,6 @@ public class Simulation {
     }
 
     public void initActions() {
-        java.util.Map<Coordinates, Entity> entities = worldMap.getEntities();
+        Map<Coordinates, Entity> entities = worldMap.getEntities();
     }
 }
