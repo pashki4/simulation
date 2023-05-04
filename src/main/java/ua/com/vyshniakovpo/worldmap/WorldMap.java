@@ -52,7 +52,7 @@ public class WorldMap {
         return herbivores.firstEntry().getValue().get(0).getCoordinates();
     }
 
-    public <T extends Coordinates> List<T> validate(List<T> list) {
+    public <T extends Coordinates> List<T> validateCoordinates(List<T> list) {
         List<T> result = new ArrayList<>();
         for (T current : list) {
             if (current.horizontal() >= 0 && current.horizontal() < x &&
@@ -72,5 +72,12 @@ public class WorldMap {
                 return emptyCoordinates;
             }
         }
+    }
+
+    public void moveEntity(Coordinates from, Coordinates too) {
+        Entity entity = entities.get(from);
+        entities.remove(from);
+        entity.setCoordinates(too);
+        entities.put(too, entity);
     }
 }

@@ -22,7 +22,7 @@ public class BreadthFirstSearch {
                 return Node.reverse(currentNode);
             }
             List<Coordinates> neighborsCoordinates = currentNode.getValue().getNeighbors();
-            List<Coordinates> validatedCoordinates = map.validate(neighborsCoordinates);
+            List<Coordinates> validatedCoordinates = map.validateCoordinates(neighborsCoordinates);
 
             for (var neighbor : Node.valueOf(validatedCoordinates)) {
                 if (!visitedNodes.contains(neighbor) && !queue.contains(neighbor)) {
