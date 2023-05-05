@@ -2,7 +2,6 @@ package ua.com.vyshniakovpo.worldmap;
 
 import ua.com.vyshniakovpo.Coordinates;
 import ua.com.vyshniakovpo.entity.Entity;
-import ua.com.vyshniakovpo.entity.Herbivore;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -26,11 +25,11 @@ public class WorldMap {
         return entities;
     }
 
-    public <T extends Entity> List<T> getEntitiesByType(Class<T> cls) {
+    public <T extends Entity> List<T> getEntitiesByType(Class<T> clazz) {
         return entities.values()
                 .stream()
-                .filter(cls::isInstance)
-                .map(cls::cast)
+                .filter(clazz::isInstance)
+                .map(clazz::cast)
                 .toList();
     }
 
@@ -38,14 +37,12 @@ public class WorldMap {
         return !entities.containsKey(coordinates);
     }
 
-    public Coordinates getClosestHerbivore(Coordinates coordinates) {
-        TreeMap<Integer, List<Entity>> herbivores = entities.values().stream()
-                .filter(Herbivore.class::isInstance)
-                .collect(Collectors.groupingBy(e -> {
-                            Coordinates current = e.getCoordinates();
-                            int difference = (current.vertical() + current.horizontal()) -
-                                    (coordinates.horizontal() + coordinates.vertical());
-                            return Math.abs(difference);
+    public <T extends Entity> Coordinates getClosestTargetByClass(Coordinates coordinates, Class<T> clazz) {
+        TreeMap<Double, List<Entity>> herbivores = entities.values().stream()
+                .filter(clazz::isInstance)
+                .collect(Collectors.groupingBy(entity -> {
+                            Coordinates current = entity.getCoordinates();
+                            return Coordinates.getLengthBetween(coordinates, current);
                         }, TreeMap::new, Collectors.toList())
                 );
 
@@ -55,8 +52,8 @@ public class WorldMap {
     public <T extends Coordinates> List<T> validateCoordinates(List<T> list) {
         List<T> result = new ArrayList<>();
         for (T current : list) {
-            if (current.horizontal() >= 0 && current.horizontal() < x &&
-                    current.vertical() >= 0 && current.vertical() < y) {
+            if (current.x() >= 0 && current.x() < x &&
+                    current.y() >= 0 && current.y() < y) {
                 result.add(current);
             }
         }

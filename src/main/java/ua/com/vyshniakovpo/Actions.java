@@ -16,7 +16,7 @@ public class Actions {
 
     public static void initActions(WorldMap worldMap) {
         List<Entity> listOfEntities = EntityFactory.getListOfEntities(
-                List.of("predator", "herbivore", "rock", "rock", "herbivore", "herbivore")
+                List.of("predator", "herbivore", "rock", "rock", "herbivore", "herbivore", "grass", "grass")
 //                List.of("predator", "herbivore", "herbivore",
 //                "herbivore", "tree", "tree", "tree", "rock", "rock", "rock",
 //                        "grass","grass","grass", "grass", "grass", "grass", "grass", "grass")
@@ -48,6 +48,11 @@ public class Actions {
         Entity herbivore2 = listOfEntities.get(5);
         herbivore2.setCoordinates(new Coordinates(5, 0));
 
+        Entity grass = listOfEntities.get(6);
+        grass.setCoordinates(new Coordinates(2, 2));
+        Entity grass1 = listOfEntities.get(7);
+        grass1.setCoordinates(new Coordinates(4, 1));
+
 
         map.addEntity(predator.getCoordinates(), predator);
         map.addEntity(herbivore.getCoordinates(), herbivore);
@@ -55,5 +60,7 @@ public class Actions {
         map.addEntity(rock1.getCoordinates(), rock1);
         map.addEntity(herbivore1.getCoordinates(), herbivore1);
         map.addEntity(herbivore2.getCoordinates(), herbivore2);
+        map.addEntity(grass.getCoordinates(), grass);
+        map.addEntity(grass1.getCoordinates(), grass1);
     }
 }
