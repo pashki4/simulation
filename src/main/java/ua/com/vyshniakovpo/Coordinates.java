@@ -6,18 +6,17 @@ import java.util.Objects;
 
 public record Coordinates(int x, int y) {
 
-
-    public <T extends Coordinates> List<T> getNeighbors() {
-        List<T> result = new ArrayList<>();
-        result.add((T) new Coordinates(x + 1, y));
-        result.add((T) new Coordinates(x - 1, y));
-        result.add((T) new Coordinates(x, y + 1));
-        result.add((T) new Coordinates(x, y - 1));
+    public List<Coordinates> getNeighbors() {
+        List<Coordinates> result = new ArrayList<>();
+        result.add(new Coordinates(x + 1, y));
+        result.add(new Coordinates(x - 1, y));
+        result.add(new Coordinates(x, y + 1));
+        result.add(new Coordinates(x, y - 1));
         return result;
     }
 
-    public static Double getLengthBetween(Coordinates from, Coordinates to) {
-        return Math.sqrt((from.x - to.x) * (from.x - to.x) + (from.y - to.y) * (from.y - to.y));
+    public static double getLengthBetween(Coordinates from, Coordinates to) {
+        return Math.sqrt(((from.x - to.x) * (from.x - to.x)) + (double) ((from.y - to.y) * (from.y - to.y)));
     }
 
     @Override

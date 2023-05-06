@@ -1,7 +1,9 @@
 package ua.com.vyshniakovpo.worldmap;
 
 import ua.com.vyshniakovpo.Coordinates;
+import ua.com.vyshniakovpo.entity.Creature;
 import ua.com.vyshniakovpo.entity.Entity;
+import ua.com.vyshniakovpo.entity.Herbivore;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -25,16 +27,16 @@ public class WorldMap {
         return entities;
     }
 
-    public <T extends Entity> List<T> getEntitiesByType(Class<T> clazz) {
+    public <T extends Creature> List<Creature> getCreaturesByType(Class<T> clazz) {
         return entities.values()
                 .stream()
                 .filter(clazz::isInstance)
-                .map(clazz::cast)
+                .map(Creature.class::cast)
                 .toList();
     }
 
-    public boolean isCellEmpty(Coordinates coordinates) {
-        return !entities.containsKey(coordinates);
+    public boolean isCellOccupied(Coordinates coordinates) {
+        return entities.containsKey(coordinates);
     }
 
     public <T extends Entity> Coordinates getClosestTargetByClass(Coordinates coordinates, Class<T> clazz) {
@@ -76,5 +78,19 @@ public class WorldMap {
         entities.remove(from);
         entity.setCoordinates(too);
         entities.put(too, entity);
+    }
+
+    public Entity getEntityByCoordinates(Coordinates coordinates) {
+        return entities.get(coordinates);
+    }
+
+    public void refresh() {
+        Optional<Coordinates> coordinates = entities.values().stream()
+                .filter(Herbivore.class::isInstance)
+                .filter(entity -> ((Herbivore) entity).getHp() == 0)
+                .findAny()
+                .map(Entity::getCoordinates);
+
+        coordinates.ifPresent(entities::remove);
     }
 }

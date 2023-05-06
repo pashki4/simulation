@@ -11,17 +11,17 @@ public class BreadthFirstSearch {
         throw new UnsupportedOperationException("Utility class cannot be instantiated");
     }
 
-    public static Node<Coordinates> search(Node<Coordinates> root, Node<Coordinates> target, WorldMap map) {
-        Queue<Node<Coordinates>> queue = new LinkedList<>();
-        List<Node<Coordinates>> visitedNodes = new ArrayList<>();
+    public static Node search(Node root, Node target, WorldMap map) {
+        Queue<Node> queue = new LinkedList<>();
+        List<Node> visitedNodes = new ArrayList<>();
         queue.add(root);
 
         while (!queue.isEmpty()) {
-            Node<Coordinates> currentNode = queue.poll();
-            if (currentNode.getValue().equals(target.getValue())) {
+            Node currentNode = queue.poll();
+            if (currentNode.getCoordinates().equals(target.getCoordinates())) {
                 return Node.reverse(currentNode);
             }
-            List<Coordinates> neighborsCoordinates = currentNode.getValue().getNeighbors();
+            List<Coordinates> neighborsCoordinates = currentNode.getCoordinates().getNeighbors();
             List<Coordinates> validatedCoordinates = map.validateCoordinates(neighborsCoordinates);
 
             for (var neighbor : Node.valueOf(validatedCoordinates)) {
@@ -29,7 +29,7 @@ public class BreadthFirstSearch {
                     if (target.equals(neighbor)) {
                         neighbor.setParent(currentNode);
                         return Node.reverse(neighbor);
-                    } else if (!map.isCellEmpty(neighbor.getValue())) {
+                    } else if (map.isCellOccupied(neighbor.getCoordinates())) {
                         visitedNodes.add(neighbor);
                         continue;
                     }

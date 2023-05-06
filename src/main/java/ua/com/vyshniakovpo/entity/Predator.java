@@ -1,6 +1,9 @@
 package ua.com.vyshniakovpo.entity;
 
 import ua.com.vyshniakovpo.Actions;
+import ua.com.vyshniakovpo.Coordinates;
+import ua.com.vyshniakovpo.bfs.BreadthFirstSearch;
+import ua.com.vyshniakovpo.bfs.Node;
 import ua.com.vyshniakovpo.exception.SleepException;
 import ua.com.vyshniakovpo.worldmap.WorldMap;
 import ua.com.vyshniakovpo.worldmap.WorldMapConsoleRenderer;
@@ -9,16 +12,35 @@ import java.util.List;
 
 public class Predator extends Creature {
 
+    private int strengh;
+
     public Predator() {
         super(1);
-        this.targetClass = Herbivore.class;
+        this.strengh = 50;
     }
 
     @Override
-    public void makeMove(WorldMap worldMap) {
+    public void makeMove(WorldMap map) {
         while (movesCount != 0) {
+
+            Coordinates closestTarget = map.getClosestTargetByClass(this.coordinates, Herbivore.class);
+            Node target = Node.valueOf(closestTarget);
+            Node root = Node.valueOf(coordinates);
+            Node fullPath = BreadthFirstSearch.search(root, target, map);
+
+            //may be null
+            Node nextMove = fullPath.getParent();
+
+            List<Coordinates> neighbors = root.getCoordinates().getNeighbors();
+            List<Coordinates> validatedCoordinates = map.validateCoordinates(neighbors);
+
+            if (validatedCoordinates.contains(target.getCoordinates())) {
+                attack(map.getEntityByCoordinates(nextMove.getCoordinates()));
+            } else {
+                map.moveEntity(coordinates, nextMove.getCoordinates());
+            }
             movesCount--;
-            move(worldMap);
+            map.refresh();
             try {
                 Thread.sleep(1_500);
             } catch (InterruptedException e) {
@@ -27,6 +49,14 @@ public class Predator extends Creature {
             }
         }
         resetMovesCount();
+    }
+
+    private void attack(Entity herbivore) {
+        Herbivore herb = Herbivore.class.cast(herbivore);
+        int hp = herb.getHp();
+        if (hp > 0) {
+            herb.setHp(herb.getHp() - strengh);
+        }
     }
 
     private void resetMovesCount() {
@@ -40,7 +70,7 @@ public class Predator extends Creature {
 
         renderer.render(map);
 
-        List<Predator> predator = map.getEntitiesByType(Predator.class);
+        List<Creature> predator = map.getCreaturesByType(Predator.class);
 
         for (int i = 0; i < 15; i++) {
             predator.get(0).makeMove(map);
