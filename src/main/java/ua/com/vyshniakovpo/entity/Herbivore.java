@@ -22,14 +22,18 @@ public class Herbivore extends Creature {
             Node nextMove = path.getParent();
             map.moveEntity(coordinates, nextMove.getCoordinates());
             movesCount--;
-            try {
-                Thread.sleep(1_500);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new SleepException("Trying to sleep, but was error", e);
-            }
+            threadSleep();
         }
         resetMovesCount();
+    }
+
+    private static void threadSleep() {
+        try {
+            Thread.sleep(1_500);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new SleepException("Trying to sleep, but was error", e);
+        }
     }
 
     private Node getPathToTarget(WorldMap map) {
@@ -50,13 +54,14 @@ public class Herbivore extends Creature {
         Actions.initActions(map);
         renderer.render(map);
 
-        List<Creature> herbivore = map.getCreaturesByType(Herbivore.class);
-
-        for (int i = 0; i < 2; i++) {
-           for(Creature creature : herbivore) {
-               creature.makeMove(map);
-               renderer.render(map);
-           }
+        for (int i = 0; i < 4; i++) {
+            List<Creature> creatures = map.getCreaturesByType(Creature.class);
+            for (Creature creature : creatures) {
+                if (creature.hp != 0) {
+                    creature.makeMove(map);
+                    renderer.render(map);
+                }
+            }
         }
     }
 }

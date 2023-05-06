@@ -12,26 +12,24 @@ import java.util.List;
 
 public class Predator extends Creature {
 
-    private int strengh;
+    private final int strength;
 
     public Predator() {
-        super(1);
-        this.strengh = 50;
+        super(2);
+        this.strength = 50;
     }
 
     @Override
     public void makeMove(WorldMap map) {
         while (movesCount != 0) {
-
             Coordinates closestTarget = map.getClosestTargetByClass(this.coordinates, Herbivore.class);
+            Node start = Node.valueOf(coordinates);
             Node target = Node.valueOf(closestTarget);
-            Node root = Node.valueOf(coordinates);
-            Node fullPath = BreadthFirstSearch.search(root, target, map);
+            Node fullPath = BreadthFirstSearch.search(start, target, map);
 
-            //may be null
             Node nextMove = fullPath.getParent();
 
-            List<Coordinates> neighbors = root.getCoordinates().getNeighbors();
+            List<Coordinates> neighbors = start.getCoordinates().getNeighbors();
             List<Coordinates> validatedCoordinates = map.validateCoordinates(neighbors);
 
             if (validatedCoordinates.contains(target.getCoordinates())) {
@@ -40,38 +38,40 @@ public class Predator extends Creature {
                 map.moveEntity(coordinates, nextMove.getCoordinates());
             }
             movesCount--;
-            map.refresh();
-            try {
-                Thread.sleep(1_500);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new SleepException("Trying to sleep, but was error", e);
-            }
+            map.cleanKilledEntities();
+            threadSleep();
         }
         resetMovesCount();
     }
 
+    private static void threadSleep() {
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new SleepException("Trying to sleep, but was error", e);
+        }
+    }
+
     private void attack(Entity herbivore) {
-        Herbivore herb = Herbivore.class.cast(herbivore);
+        Herbivore herb = (Herbivore) herbivore;
         int hp = herb.getHp();
         if (hp > 0) {
-            herb.setHp(herb.getHp() - strengh);
+            herb.setHp(herb.getHp() - strength);
         }
     }
 
     private void resetMovesCount() {
-        movesCount = 1;
+        movesCount = 2;
     }
 
     public static void main(String[] args) {
         WorldMap map = new WorldMap(7, 7);
         WorldMapConsoleRenderer renderer = new WorldMapConsoleRenderer();
         Actions.initActions(map);
-
         renderer.render(map);
 
         List<Creature> predator = map.getCreaturesByType(Predator.class);
-
         for (int i = 0; i < 15; i++) {
             predator.get(0).makeMove(map);
             renderer.render(map);

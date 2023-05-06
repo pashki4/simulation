@@ -8,13 +8,11 @@ import java.util.Objects;
 
 public class WorldMapConsoleRenderer implements WorldMapRenderer {
 
-    public void render(WorldMap worldMap) {
-        java.util.Map<Coordinates, Entity> entities = worldMap.getEntities();
+    public void render(WorldMap map) {
         StringBuilder sb = new StringBuilder();
-
-        for (int vertical = worldMap.y - 1; vertical >= 0; vertical--) {
-            for (int horizontal = 0; horizontal < worldMap.x; horizontal++) {
-                Entity entity = entities.get(new Coordinates(horizontal, vertical));
+        for (int vertical = map.y - 1; vertical >= 0; vertical--) {
+            for (int horizontal = 0; horizontal < map.x; horizontal++) {
+                Entity entity = map.getEntityByCoordinates(new Coordinates(horizontal, vertical));
                 if (Objects.isNull(entity)) {
                     sb.append("🟫");
                 } else {

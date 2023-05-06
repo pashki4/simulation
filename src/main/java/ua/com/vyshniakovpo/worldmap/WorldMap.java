@@ -24,7 +24,7 @@ public class WorldMap {
     }
 
     public Map<Coordinates, Entity> getEntities() {
-        return entities;
+        return new HashMap<>(entities);
     }
 
     public <T extends Creature> List<Creature> getCreaturesByType(Class<T> clazz) {
@@ -51,9 +51,9 @@ public class WorldMap {
         return herbivores.firstEntry().getValue().get(0).getCoordinates();
     }
 
-    public <T extends Coordinates> List<T> validateCoordinates(List<T> list) {
-        List<T> result = new ArrayList<>();
-        for (T current : list) {
+    public List<Coordinates> validateCoordinates(List<Coordinates> list) {
+        List<Coordinates> result = new ArrayList<>();
+        for (Coordinates current : list) {
             if (current.x() >= 0 && current.x() < x &&
                     current.y() >= 0 && current.y() < y) {
                 result.add(current);
@@ -84,7 +84,7 @@ public class WorldMap {
         return entities.get(coordinates);
     }
 
-    public void refresh() {
+    public void cleanKilledEntities() {
         Optional<Coordinates> coordinates = entities.values().stream()
                 .filter(Herbivore.class::isInstance)
                 .filter(entity -> ((Herbivore) entity).getHp() == 0)
