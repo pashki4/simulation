@@ -12,7 +12,7 @@ public class WorldMapConsoleRenderer implements WorldMapRenderer {
         StringBuilder sb = new StringBuilder();
         for (int vertical = map.y - 1; vertical >= 0; vertical--) {
             for (int horizontal = 0; horizontal < map.x; horizontal++) {
-                Entity entity = map.getEntityByCoordinates(new Coordinates(horizontal, vertical));
+                Entity entity = map.getEntity(new Coordinates(horizontal, vertical));
                 if (Objects.isNull(entity)) {
                     sb.append("🟫");
                 } else {

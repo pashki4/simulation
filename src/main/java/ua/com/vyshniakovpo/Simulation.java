@@ -19,11 +19,7 @@ public class Simulation {
     }
 
     public void nextTurn() {
-        worldMap.getEntities().entrySet()
-                .stream()
-                .filter(Creature.class::isInstance)
-                .map(Creature.class::cast)
-                .forEach(creature -> creature.makeMove(worldMap));
+
     }
 
     public void startSimulation() {
@@ -35,6 +31,6 @@ public class Simulation {
     }
 
     public void initActions() {
-        Map<Coordinates, Entity> entities = worldMap.getEntities();
+
     }
 }

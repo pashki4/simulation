@@ -17,12 +17,13 @@ public class Predator extends Creature {
     public Predator() {
         super(2);
         this.strength = 50;
+        this.food = Herbivore.class;
     }
 
     @Override
     public void makeMove(WorldMap map) {
         while (movesCount != 0) {
-            Coordinates closestTarget = map.getClosestTargetByClass(this.coordinates, Herbivore.class);
+            Coordinates closestTarget = map.getClosestFoodByClass(this.coordinates, food);
             Node start = Node.valueOf(coordinates);
             Node target = Node.valueOf(closestTarget);
             Node fullPath = BreadthFirstSearch.search(start, target, map);
@@ -33,15 +34,21 @@ public class Predator extends Creature {
             List<Coordinates> validatedCoordinates = map.validateCoordinates(neighbors);
 
             if (validatedCoordinates.contains(target.getCoordinates())) {
-                attack(map.getEntityByCoordinates(nextMove.getCoordinates()));
+                attack(map.getEntity(nextMove.getCoordinates()));
             } else {
                 map.moveEntity(coordinates, nextMove.getCoordinates());
             }
             movesCount--;
-            map.cleanKilledEntities();
+            checkIfTheTargetWasKilled(map, target);
             threadSleep();
         }
         resetMovesCount();
+    }
+
+    private static void checkIfTheTargetWasKilled(WorldMap map, Node target) {
+        if (((Creature) map.getEntity(target.getCoordinates())).getHp() == 0) {
+            map.deleteEntity(target.getCoordinates());
+        }
     }
 
     private static void threadSleep() {
@@ -71,7 +78,7 @@ public class Predator extends Creature {
         Actions.initActions(map);
         renderer.render(map);
 
-        List<Creature> predator = map.getCreaturesByType(Predator.class);
+        List<Creature> predator = map.getEntitiesByType(Predator.class);
         for (int i = 0; i < 15; i++) {
             predator.get(0).makeMove(map);
             renderer.render(map);

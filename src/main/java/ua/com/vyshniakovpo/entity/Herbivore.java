@@ -11,14 +11,16 @@ import ua.com.vyshniakovpo.worldmap.WorldMapConsoleRenderer;
 import java.util.List;
 
 public class Herbivore extends Creature {
+
     public Herbivore() {
         super(1);
+        food = Grass.class;
     }
 
     @Override
     public void makeMove(WorldMap map) {
         while (map.isCellOccupied(coordinates) && movesCount != 0) {
-            Node path = getPathToTarget(map);
+            Node path = getPathToTheFood(map);
             Node nextMove = path.getParent();
             map.moveEntity(coordinates, nextMove.getCoordinates());
             movesCount--;
@@ -36,8 +38,8 @@ public class Herbivore extends Creature {
         }
     }
 
-    private Node getPathToTarget(WorldMap map) {
-        Coordinates closestGrass = map.getClosestTargetByClass(this.coordinates, Grass.class);
+    private Node getPathToTheFood(WorldMap map) {
+        Coordinates closestGrass = map.getClosestFoodByClass(this.coordinates, food);
         Node target = Node.valueOf(closestGrass);
         Node root = Node.valueOf(coordinates);
 
@@ -54,8 +56,8 @@ public class Herbivore extends Creature {
         Actions.initActions(map);
         renderer.render(map);
 
+        List<Creature> creatures = map.getEntitiesByType(Creature.class);
         for (int i = 0; i < 4; i++) {
-            List<Creature> creatures = map.getCreaturesByType(Creature.class);
             for (Creature creature : creatures) {
                 if (creature.hp != 0) {
                     creature.makeMove(map);

@@ -3,7 +3,6 @@ package ua.com.vyshniakovpo.worldmap;
 import ua.com.vyshniakovpo.Coordinates;
 import ua.com.vyshniakovpo.entity.Creature;
 import ua.com.vyshniakovpo.entity.Entity;
-import ua.com.vyshniakovpo.entity.Herbivore;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -23,11 +22,13 @@ public class WorldMap {
         entities.put(coordinates, entity);
     }
 
-    public Map<Coordinates, Entity> getEntities() {
-        return new HashMap<>(entities);
+    public List<Entity> getEntities() {
+        return entities.values().stream()
+                .toList();
     }
 
-    public <T extends Creature> List<Creature> getCreaturesByType(Class<T> clazz) {
+    //TODO for testing purpose, remove later
+    public <T extends Creature> List<Creature> getEntitiesByType(Class<T> clazz) {
         return entities.values()
                 .stream()
                 .filter(clazz::isInstance)
@@ -39,8 +40,8 @@ public class WorldMap {
         return entities.containsKey(coordinates);
     }
 
-    public <T extends Entity> Coordinates getClosestTargetByClass(Coordinates coordinates, Class<T> clazz) {
-        TreeMap<Double, List<Entity>> herbivores = entities.values().stream()
+    public <T extends Entity> Coordinates getClosestFoodByClass(Coordinates coordinates, Class<T> clazz) {
+        TreeMap<Double, List<Entity>> targets = entities.values().stream()
                 .filter(clazz::isInstance)
                 .collect(Collectors.groupingBy(entity -> {
                             Coordinates current = entity.getCoordinates();
@@ -48,7 +49,7 @@ public class WorldMap {
                         }, TreeMap::new, Collectors.toList())
                 );
 
-        return herbivores.firstEntry().getValue().get(0).getCoordinates();
+        return targets.firstEntry().getValue().get(0).getCoordinates();
     }
 
     public List<Coordinates> validateCoordinates(List<Coordinates> list) {
@@ -74,23 +75,16 @@ public class WorldMap {
     }
 
     public void moveEntity(Coordinates from, Coordinates too) {
-        Entity entity = entities.get(from);
-        entities.remove(from);
+        Entity entity = entities.remove(from);
         entity.setCoordinates(too);
         entities.put(too, entity);
     }
 
-    public Entity getEntityByCoordinates(Coordinates coordinates) {
-        return entities.get(coordinates);
+    public void deleteEntity(Coordinates coordinates) {
+        entities.remove(coordinates);
     }
 
-    public void cleanKilledEntities() {
-        Optional<Coordinates> coordinates = entities.values().stream()
-                .filter(Herbivore.class::isInstance)
-                .filter(entity -> ((Herbivore) entity).getHp() == 0)
-                .findAny()
-                .map(Entity::getCoordinates);
-
-        coordinates.ifPresent(entities::remove);
+    public Entity getEntity(Coordinates coordinates) {
+        return entities.get(coordinates);
     }
 }

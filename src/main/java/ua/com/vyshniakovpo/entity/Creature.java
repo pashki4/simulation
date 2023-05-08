@@ -3,6 +3,7 @@ package ua.com.vyshniakovpo.entity;
 import ua.com.vyshniakovpo.worldmap.WorldMap;
 
 public abstract class Creature extends Entity {
+    protected Class<? extends Entity> food;
     protected int movesCount;
     protected int hp = 100;
 
