@@ -25,18 +25,20 @@ public class Predator extends Creature {
             Node target = Node.valueOf(closestTarget);
             Node fullPath = BreadthFirstSearch.search(start, target, map);
 
-            Node nextMove = fullPath.getParent();
+            if (fullPath != null) {
+                Node nextMove = fullPath.getParent();
 
-            List<Coordinates> neighbors = start.getCoordinates().getNeighbors();
-            List<Coordinates> validatedCoordinates = map.validateCoordinates(neighbors);
+                List<Coordinates> neighbors = start.getCoordinates().getNeighbors();
+                List<Coordinates> validatedCoordinates = map.validateCoordinates(neighbors);
 
-            if (validatedCoordinates.contains(target.getCoordinates())) {
-                attack(map.getEntity(nextMove.getCoordinates()));
-            } else {
-                map.moveEntity(coordinates, nextMove.getCoordinates());
+                if (validatedCoordinates.contains(target.getCoordinates())) {
+                    attack(map.getEntity(nextMove.getCoordinates()));
+                } else {
+                    map.moveEntity(coordinates, nextMove.getCoordinates());
+                }
+                checkIfTheTargetWasKilled(map, target);
             }
             movesCount--;
-            checkIfTheTargetWasKilled(map, target);
         }
         resetMovesCount();
     }

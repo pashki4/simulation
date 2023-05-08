@@ -24,6 +24,6 @@ public class GrassSpawnAction extends SpawnAction {
     }
 
     private int calculateRate() {
-        return (int) (map.x * map.y * 0.1);
+        return (int) (map.x * map.y * 0.15);
     }
 }

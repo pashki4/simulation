@@ -23,6 +23,6 @@ public class TreeSpawnAction extends SpawnAction {
     }
 
     private int calculateRate() {
-        return (int) (map.x * map.y * 0.03);
+        return (int) (map.x * map.y * 0.06);
     }
 }

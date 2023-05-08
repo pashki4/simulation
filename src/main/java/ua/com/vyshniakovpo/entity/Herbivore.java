@@ -16,8 +16,10 @@ public class Herbivore extends Creature {
     public void makeMove(WorldMap map) {
         while (map.isCellExists(coordinates) && movesCount != 0) {
             Node path = getPathToTheFood(map);
-            Node nextMove = path.getParent();
-            map.moveEntity(coordinates, nextMove.getCoordinates());
+            if (path != null) {
+                Node nextMove = path.getParent();
+                map.moveEntity(coordinates, nextMove.getCoordinates());
+            }
             movesCount--;
         }
         resetMovesCount();
