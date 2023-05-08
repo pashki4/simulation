@@ -27,7 +27,6 @@ public class WorldMap {
                 .toList();
     }
 
-    //TODO for testing purpose, remove later
     public <T extends Creature> List<Creature> getEntitiesByType(Class<T> clazz) {
         return entities.values()
                 .stream()
@@ -36,7 +35,7 @@ public class WorldMap {
                 .toList();
     }
 
-    public boolean isCellOccupied(Coordinates coordinates) {
+    public boolean isCellExists(Coordinates coordinates) {
         return entities.containsKey(coordinates);
     }
 

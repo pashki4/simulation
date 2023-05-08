@@ -3,7 +3,10 @@ package ua.com.vyshniakovpo.bfs;
 import ua.com.vyshniakovpo.Coordinates;
 import ua.com.vyshniakovpo.worldmap.WorldMap;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 public class BreadthFirstSearch {
 
@@ -29,7 +32,7 @@ public class BreadthFirstSearch {
                     if (target.equals(neighbor)) {
                         neighbor.setParent(currentNode);
                         return Node.reverse(neighbor);
-                    } else if (map.isCellOccupied(neighbor.getCoordinates())) {
+                    } else if (map.isCellExists(neighbor.getCoordinates())) {
                         visitedNodes.add(neighbor);
                         continue;
                     }
