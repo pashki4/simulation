@@ -60,6 +60,4 @@ public class Predator extends Creature {
     private void resetMovesCount() {
         movesCount = 2;
     }
-
-
 }
