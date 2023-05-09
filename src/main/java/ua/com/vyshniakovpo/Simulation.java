@@ -8,13 +8,16 @@ import ua.com.vyshniakovpo.worldmap.WorldMapRenderer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Simulation {
+public class Simulation implements Runnable {
 
     private final WorldMap map;
     private final WorldMapRenderer renderer;
 
-    private final List<Action> actions = new ArrayList<>();
+    private final List<Action> initActions = new ArrayList<>();
+    private final List<Action> moveActions = new ArrayList<>();
     private int turnCount;
+
+    private boolean running;
 
     public Simulation(WorldMap map, WorldMapRenderer renderer) {
         this.map = map;
@@ -22,19 +25,28 @@ public class Simulation {
         addActions();
     }
 
-    public void nextTurn() {
+    @Override
+    public void run() {
+        while (running) {
+            nextTurn();
+            System.out.println("Turn count: " + ++turnCount);
+            threadSleep();
+        }
+    }
 
+    public void nextTurn() {
+        initActions.forEach(Action::perform);
+        moveActions.forEach(Action::perform);
+        renderer.render(map);
     }
 
     public void startSimulation() {
-        while (true) {
-            for (Action action : actions) {
-                action.perform();
-            }
-            renderer.render(map);
-            System.out.println(++turnCount);
-            threadSleep();
-        }
+        running = true;
+        new Thread(this).start();
+    }
+
+    public void pauseSimulation() {
+        running = false;
     }
 
     private static void threadSleep() {
@@ -46,15 +58,12 @@ public class Simulation {
         }
     }
 
-    public void pauseSimulation() {
-    }
-
     private void addActions() {
-        actions.add(new GrassSpawnAction(map));
-        actions.add(new HerbivoreSpawnAction(map));
-        actions.add(new PredatorSpawnAction(map));
-        actions.add(new RockSpawnAction(map));
-        actions.add(new TreeSpawnAction(map));
-        actions.add(new MoveAction(map));
+        initActions.add(new GrassSpawnAction(map));
+        initActions.add(new HerbivoreSpawnAction(map));
+        initActions.add(new PredatorSpawnAction(map));
+        initActions.add(new RockSpawnAction(map));
+        initActions.add(new TreeSpawnAction(map));
+        moveActions.add(new MoveAction(map));
     }
 }
