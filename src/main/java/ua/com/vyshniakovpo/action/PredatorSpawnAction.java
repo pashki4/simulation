@@ -24,6 +24,6 @@ public class PredatorSpawnAction extends SpawnAction {
     }
 
     private int calculateRate() {
-        return 1;
+        return (int) (map.x * map.y * 0.02);
     }
 }

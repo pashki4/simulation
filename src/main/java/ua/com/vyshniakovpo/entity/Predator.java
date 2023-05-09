@@ -9,12 +9,12 @@ import java.util.List;
 
 public class Predator extends Creature {
 
-    private final int strength;
+    private final int attackPower;
 
     public Predator() {
         super(2);
         this.food = Herbivore.class;
-        this.strength = 50;
+        this.attackPower = 50;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class Predator extends Creature {
         Herbivore herb = (Herbivore) herbivore;
         int hp = herb.getHp();
         if (hp > 0) {
-            herb.setHp(herb.getHp() - strength);
+            herb.setHp(herb.getHp() - attackPower);
         }
     }
 

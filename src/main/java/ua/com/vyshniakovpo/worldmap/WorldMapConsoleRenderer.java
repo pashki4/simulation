@@ -17,11 +17,11 @@ public class WorldMapConsoleRenderer implements WorldMapRenderer {
                     sb.append("🟫");
                 } else {
                     switch (entity.getClass().getSimpleName().toLowerCase()) {
-                        case "grass" -> sb.append("🟩");
+                        case "grass" -> sb.append("🌻");
                         case "rock" -> sb.append("🪨");
                         case "tree" -> sb.append("🌳");
                         case "predator" -> sb.append("🦊");
-                        case "herbivore" -> sb.append("🐓");
+                        case "herbivore" -> sb.append("🐔");
                         default -> throw new UnknownEntity("Unknown entity: "
                                 + entity.getClass().getSimpleName());
                     }
